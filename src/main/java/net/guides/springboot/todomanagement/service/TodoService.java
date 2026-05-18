@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import net.guides.springboot.todomanagement.model.Todo;
 import net.guides.springboot.todomanagement.repository.TodoRepository;
+import net.guides.springboot.todomanagement.model.User;
+import net.guides.springboot.todomanagement.service.UserService;
 
 @Service
 public class TodoService implements ITodoService {
@@ -16,9 +18,12 @@ public class TodoService implements ITodoService {
 	@Autowired
 	private TodoRepository todoRepository;
 
+	@Autowired
+	private UserService userService;
+
 	@Override
-	public List<Todo> getTodosByUser(String user) {
-		return todoRepository.findByUserName(user);
+	public List<Todo> getTodosByUserId(Long userId) {
+		return todoRepository.findByUser_Id(userId);
 	}
 
 	@Override
@@ -32,8 +37,11 @@ public class TodoService implements ITodoService {
 	}
 
 	@Override
-	public void addTodo(String name, String desc, Date targetDate, boolean isDone) {
-		todoRepository.save(new Todo(name, desc, targetDate, isDone));
+	public void addTodo(Long userId, String desc, Date targetDate, boolean isDone) {
+		if (userId == null) return;
+		User user = userService.findById(userId);
+		if (user == null) return;
+		todoRepository.save(new Todo(user, desc, targetDate));
 	}
 
 	@Override
@@ -47,5 +55,11 @@ public class TodoService implements ITodoService {
 	@Override
 	public void saveTodo(Todo todo) {
 		todoRepository.save(todo);
+	}
+
+	public long getDaysUntilDue(Date targetDate) {
+		if (targetDate == null) return -1;
+		long diff = targetDate.getTime() - System.currentTimeMillis();
+		return diff / (1000 * 60 * 60 * 24);
 	}
 }

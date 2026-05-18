@@ -1,27 +1,45 @@
+<!DOCTYPE html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
-<html>
 
+<html lang="en">
 <head>
-<title>Todo Management</title>
-<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
-	rel="stylesheet">
+	<meta charset="UTF-8">
+	<title>Todo Management</title>
+	<link href="${pageContext.request.contextPath}/webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 
-<style>
-.footer {
-	position: fixed;
-	left: 0;
-	bottom: 0;
-	width: 100%;
-	background-color: black;
-	color: white;
-	height: 100px;
-	text-align: center;
-}
-</style>
+	<style>
+		.footer {
+			position: fixed;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			background-color: black;
+			color: white;
+			height: 100px;
+			text-align: center;
+		}
 
+		.input-date-wrapper { position: relative; }
+		.real-date-input { position: relative; z-index: 2; }
+		.real-date-input:not(:focus) { color: transparent; }
+		.real-date-input::placeholder { color: #999; }
+
+		.date-overlay {
+			position: absolute;
+			left: 12px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #555;
+			font-style: italic;
+			z-index: 1;
+			pointer-events: none;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	</style>
 </head>
-
 <body>

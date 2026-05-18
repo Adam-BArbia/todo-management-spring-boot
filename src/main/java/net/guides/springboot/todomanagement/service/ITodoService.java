@@ -9,13 +9,13 @@ import net.guides.springboot.todomanagement.model.Todo;
 
 public interface ITodoService {
 
-	List<Todo> getTodosByUser(String user);
+	List<Todo> getTodosByUserId(Long userId);
 
 	Optional<Todo> getTodoById(long id);
 
 	void updateTodo(Todo todo);
 
-	void addTodo(String name, String desc, Date targetDate, boolean isDone);
+	void addTodo(Long userId, String desc, Date targetDate, boolean isDone);
 
 	void deleteTodo(long id);
 	

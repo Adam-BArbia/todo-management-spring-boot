@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import net.guides.springboot.todomanagement.model.Todo;
 
 public interface TodoRepository extends JpaRepository<Todo, Long>{
-	List<Todo> findByUserName(String user);
+	// find todos by owner's id (user_id FK)
+	List<Todo> findByUser_Id(Long userId);
 }

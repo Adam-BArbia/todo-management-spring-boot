@@ -17,13 +17,19 @@
 
 						<fieldset class="form-group">
 							<form:label path="targetDate">Target Date</form:label>
-							<form:input path="targetDate" type="text" class="form-control"
-								required="required" />
+
+							<div class="input-date-wrapper" style="position:relative;">
+								<form:input path="targetDate" id="targetDate" cssClass="form-control real-date-input"
+											placeholder="dd/mm/yyyy" required="required" />
+								<span id="targetDateOverlay" class="date-overlay"></span>
+							</div>
+
 							<form:errors path="targetDate" cssClass="text-warning" />
 						</fieldset>
 
 						<button type="submit" class="btn btn-success">Save</button>
 					</form:form>
+
 				</div>
 			</div>
 		</div>

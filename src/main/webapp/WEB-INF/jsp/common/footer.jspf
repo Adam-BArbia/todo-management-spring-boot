@@ -1,20 +1,168 @@
-<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script
-	src="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js"></script>
+<script src="${pageContext.request.contextPath}/webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js"></script>
 <script>
-	$('#targetDate').datepicker({
-		format : 'dd/mm/yyyy'
+	$(function() {
+		var $target = $('#targetDate');
+		if (!$target.length) {
+			return;
+		}
+
+		var $overlay = $('#targetDateOverlay');
+
+		$target.datepicker({
+			format: 'dd/mm/yyyy',
+			todayBtn: "linked",
+			clearBtn: true,
+			autoclose: true,
+			todayHighlight: true,
+			orientation: "bottom auto"
+		}).on('changeDate', function() {
+			updateReadable();
+		});
+
+		$target.on('input', updateReadable);
+
+		$target.on('focus', function() {
+			if ($overlay.length) {
+				$overlay.text('');
+			}
+		});
+
+		$target.on('blur', function() {
+			updateReadable();
+		});
+
+		function updateReadable() {
+			if (!$overlay.length) return;
+
+			var val = $target.val();
+			if (!val) {
+				$overlay.text('');
+				return;
+			}
+
+			var parts = val.split('/');
+			if (parts.length !== 3) {
+				$overlay.text('');
+				return;
+			}
+
+			var day = parseInt(parts[0], 10),
+					month = parseInt(parts[1], 10) - 1,
+					year = parseInt(parts[2], 10);
+
+			var d = new Date(year, month, day);
+			if (isNaN(d.getTime())) {
+				$overlay.text('');
+				return;
+			}
+
+			var options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+			var readable = d.toLocaleDateString('en-GB', options);
+			$overlay.text(readable);
+		}
+
+		updateReadable();
+	});
+
+	// Password strength & inline validation (register and change-password pages)
+	$(function() {
+
+		function scorePassword(pw) {
+			var score = 0;
+			if (!pw) return 0;
+			if (pw.length >= 8) score += 1;
+			if (pw.length >= 12) score += 1;
+			if (/[a-z]/.test(pw)) score += 1;
+			if (/[A-Z]/.test(pw)) score += 1;
+			if (/[0-9]/.test(pw)) score += 1;
+			if (/[^A-Za-z0-9]/.test(pw)) score += 1;
+			return score; // 0..6
+		}
+
+		function strengthToPercent(score) {
+			return Math.min(100, Math.round((score / 6) * 100));
+		}
+
+		function strengthClass(score) {
+			if (score <= 1) return 'danger';
+			if (score <= 3) return 'warning';
+			return 'success';
+		}
+
+		function wirePasswordFields(options) {
+			var $pw = $(options.pw);
+			var $confirm = $(options.confirm);
+			var $bar = $(options.bar);
+			var $text = $(options.text);
+			var $match = $(options.match);
+			var $submit = $(options.submit);
+
+			function update() {
+				var pwv = $pw.val() || '';
+				var conf = $confirm.val() || '';
+				var score = scorePassword(pwv);
+				var pct = strengthToPercent(score);
+				var cls = strengthClass(score);
+				$bar.removeClass('progress-bar-danger progress-bar-warning progress-bar-success');
+				if (cls === 'danger') $bar.addClass('progress-bar-danger');
+				if (cls === 'warning') $bar.addClass('progress-bar-warning');
+				if (cls === 'success') $bar.addClass('progress-bar-success');
+				$bar.css('width', pct + '%');
+				$text.text('Password strength: ' + (pct) + '%');
+
+				// match check
+				if (conf && pwv !== conf) {
+					$match.show();
+					$submit.prop('disabled', true);
+				} else {
+					$match.hide();
+					// enable only if minimal score (>=2) and passwords not empty
+					if (pwv.length >= 6 && score >= 2) {
+						$submit.prop('disabled', false);
+					} else {
+						$submit.prop('disabled', true);
+					}
+				}
+			}
+
+			$pw.on('input', update);
+			$confirm.on('input', update);
+			update();
+		}
+
+		// Register page
+		if ($('#password').length && $('#confirmPassword').length) {
+			wirePasswordFields({
+				pw: '#password',
+				confirm: '#confirmPassword',
+				bar: '#passwordStrengthBar',
+				text: '#passwordStrengthText',
+				match: '#passwordMatch',
+				submit: '#registerSubmit'
+			});
+		}
+
+		// Change password page
+		if ($('#newPassword').length && $('#confirmPassword').length) {
+			wirePasswordFields({
+				pw: '#newPassword',
+				confirm: '#confirmPassword',
+				bar: '#newPasswordStrengthBar',
+				text: '#newPasswordStrengthText',
+				match: '#newPasswordMatch',
+				submit: '#changeSubmit'
+			});
+		}
+
 	});
 </script>
 
-
-<div class="footer">
-	Fixed Footer
-	<h1>
-		<a href="http://www.javaguides.net/p/spring-boot-tutorial.html">
-			Spring Boot Tutorial</a>
-	</h1>
+<div class="footer" style="align-content: center">
+	<h3>
+		<code style="background-color: black"><a href="https://www.linkedin.com/in/adam-ben-arbia/" style="color: cadetblue">made by A.B.A under MIT licence</a></code>
+	</h3>
 </div>
 </body>
 </html>

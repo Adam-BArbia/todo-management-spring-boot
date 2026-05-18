@@ -2,6 +2,7 @@ package net.guides.springboot.todomanagement.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -20,12 +21,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.guides.springboot.todomanagement.model.Todo;
 import net.guides.springboot.todomanagement.service.ITodoService;
+import net.guides.springboot.todomanagement.model.User;
+import net.guides.springboot.todomanagement.service.UserService;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class TodoController {
 
 	@Autowired
 	private ITodoService todoService;
+
+	@Autowired
+	private UserService userService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -35,21 +48,52 @@ public class TodoController {
 	}
 
 	@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
-	public String showTodos(ModelMap model) {
-		String name = getLoggedInUserName(model);
-		model.put("todos", todoService.getTodosByUser(name));
-		// model.put("todos", service.retrieveTodos(name));
+	public String showTodos(@RequestParam(required = false) String search, ModelMap model) {
+		User user = getLoggedInUser(model);
+		Long userId = (user != null) ? user.getId() : null;
+		// fetch all todos for user
+		java.util.List<Todo> todos = (userId != null) ? todoService.getTodosByUserId(userId) : java.util.Collections.emptyList();
+
+		// filter by search (description) if provided
+		if (search != null && !search.trim().isEmpty()) {
+			String q = search.trim().toLowerCase();
+			todos = todos.stream()
+					.filter(t -> t.getDescription() != null && t.getDescription().toLowerCase().contains(q))
+					.collect(Collectors.toList());
+		}
+
+		// build map todoId -> daysUntilDue (targetDate - today)
+		Map<Long, Long> daysLeftMap = new HashMap<>();
+		for (Todo t : todos) {
+			if (t.getTargetDate() != null) {
+				LocalDate target = t.getTargetDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), target);
+				daysLeftMap.put(t.getId(), daysLeft);
+			} else {
+				daysLeftMap.put(t.getId(), null);
+			}
+		}
+
+		model.put("todos", todos);
+		model.put("search", search);
+		model.put("daysLeftMap", daysLeftMap);
 		return "list-todos";
 	}
 
-	private String getLoggedInUserName(ModelMap model) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			return ((UserDetails) principal).getUsername();
+	private User getLoggedInUser(ModelMap model) {
+		org.springframework.security.core.Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth == null) {
+			return null;
 		}
-
-		return principal.toString();
+		Object principal = auth.getPrincipal();
+		String username = null;
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = (principal != null) ? principal.toString() : null;
+		}
+		if (username == null) return null;
+		return userService.findByUsername(username);
 	}
 
 	@RequestMapping(value = "/add-todo", method = RequestMethod.GET)
@@ -67,7 +111,8 @@ public class TodoController {
 
 	@RequestMapping(value = "/update-todo", method = RequestMethod.GET)
 	public String showUpdateTodoPage(@RequestParam long id, ModelMap model) {
-		Todo todo = todoService.getTodoById(id).get();
+		Todo todo = todoService.getTodoById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid todo id: " + id));
 		model.put("todo", todo);
 		return "todo";
 	}
@@ -79,7 +124,8 @@ public class TodoController {
 			return "todo";
 		}
 
-		todo.setUserName(getLoggedInUserName(model));
+		User user = getLoggedInUser(model);
+		if (user != null) todo.setUser(user);
 		todoService.updateTodo(todo);
 		return "redirect:/list-todos";
 	}
@@ -91,7 +137,8 @@ public class TodoController {
 			return "todo";
 		}
 
-		todo.setUserName(getLoggedInUserName(model));
+		User user = getLoggedInUser(model);
+		if (user != null) todo.setUser(user);
 		todoService.saveTodo(todo);
 		return "redirect:/list-todos";
 	}
