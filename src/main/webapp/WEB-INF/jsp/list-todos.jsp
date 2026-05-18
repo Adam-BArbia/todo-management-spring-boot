@@ -66,11 +66,12 @@
 					<table class="table table-striped">
 						<thead>
 						<tr>
-							<th width="30%">Description</th>
-							<th width="20%">Target Date</th>
-							<th width="15%">Priority</th>
-							<th width="15%">Status</th>
-							<th width="20%">Actions</th>
+							<th width="25%">Description</th>
+							<th width="15%">Target Date</th>
+							<th width="12%">Priority</th>
+							<th width="12%">Status</th>
+							<th width="13%">Tags</th>
+							<th width="23%">Actions</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -102,6 +103,16 @@
 								<span class="label ${todo.status.cssClass}">
 									${todo.status.label}
 								</span>
+							</td>
+							<td>
+								<c:if test="${not empty todo.tags}">
+									<c:forEach items="${todo.tags}" var="tag">
+										<span class="label label-default" style="margin-right: 3px;">${tag.name}</span>
+									</c:forEach>
+								</c:if>
+								<c:if test="${empty todo.tags}">
+									<span class="text-muted">-</span>
+								</c:if>
 							</td>
 							<td>
 								<div style="margin-bottom: 8px;">

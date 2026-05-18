@@ -15,7 +15,7 @@
 		body {
 			margin: 0;
 			padding: 0;
-			padding-top: 85px; /* space for fixed navbar */
+			padding-top: 80px; /* space for fixed navbar */
 			background-color: #f8f9fb;
 			color: #222;
 			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -51,17 +51,24 @@
 		.navbar-inverse {
 			background-color: #0b2340;
 			border-color: #062033;
+			padding: 5px 0 !important;
+			min-height: auto !important;
 		}
 		.navbar-inverse .navbar-brand {
 			color: #fff;
 			font-weight: 600;
 			letter-spacing: 0.5px;
+			padding: 5px 15px !important;
 		}
 		.navbar-inverse .navbar-nav>li>a {
 			color: #dbe9ff;
+			padding: 5px 12px !important;
 		}
 		.navbar-inverse .navbar-nav>li>a:hover {
 			color: #ffffff;
+		}
+		.navbar-header {
+			padding: 5px 0 !important;
 		}
 
 		.input-date-wrapper { position: relative; }

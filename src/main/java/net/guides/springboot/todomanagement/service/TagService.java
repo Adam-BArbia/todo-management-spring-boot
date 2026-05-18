@@ -8,13 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.guides.springboot.todomanagement.model.Tag;
+import net.guides.springboot.todomanagement.model.Todo;
 import net.guides.springboot.todomanagement.repository.TagRepository;
+import net.guides.springboot.todomanagement.repository.TodoRepository;
 
 @Service
 public class TagService {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private TodoRepository todoRepository;
 
     public List<Tag> findAll() {
         return tagRepository.findAll();
@@ -39,7 +44,20 @@ public class TagService {
     }
 
     public void deleteById(Long id) {
-        tagRepository.deleteById(id);
+        Optional<Tag> tagOpt = tagRepository.findById(id);
+        if (tagOpt.isPresent()) {
+            Tag tag = tagOpt.get();
+            // Remove this tag from all todos
+            List<Todo> allTodos = todoRepository.findAll();
+            for (Todo todo : allTodos) {
+                if (todo.getTags() != null && todo.getTags().contains(tag)) {
+                    todo.getTags().remove(tag);
+                    todoRepository.save(todo);
+                }
+            }
+            // Now delete the tag
+            tagRepository.deleteById(id);
+        }
     }
 }
 
