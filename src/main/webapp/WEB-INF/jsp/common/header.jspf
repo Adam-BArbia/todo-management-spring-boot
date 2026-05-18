@@ -15,6 +15,10 @@
 		body {
 			margin: 0;
 			padding: 0;
+			padding-top: 70px; /* space for fixed navbar */
+			background-color: #f8f9fb;
+			color: #222;
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 		}
 
 		.footer {
@@ -41,6 +45,23 @@
 
 		table tbody td {
 			vertical-align: middle;
+		}
+
+		/* Navbar tweaks */
+		.navbar-inverse {
+			background-color: #0b2340;
+			border-color: #062033;
+		}
+		.navbar-inverse .navbar-brand {
+			color: #fff;
+			font-weight: 600;
+			letter-spacing: 0.5px;
+		}
+		.navbar-inverse .navbar-nav>li>a {
+			color: #dbe9ff;
+		}
+		.navbar-inverse .navbar-nav>li>a:hover {
+			color: #ffffff;
 		}
 
 		.input-date-wrapper { position: relative; }

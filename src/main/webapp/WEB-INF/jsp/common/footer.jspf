@@ -159,10 +159,22 @@
 	});
 </script>
 
-<div class="footer" style="background-color: #010b29;align-content: center">
-	<h3>
-		<code style="background-color: #010b29 "><a href="https://www.linkedin.com/in/adam-ben-arbia/" style="color: cadetblue; opacity: 30%">made by A.B.A under MIT licence</a></code>
-	</h3>
-</div>
+<footer class="footer" role="contentinfo" style="background-color: #0b2340; color: #e6eefb;">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<small>
+					<span style="opacity:0.9">&copy; 2026 TodoMgmt</span>
+					&nbsp;&middot;&nbsp;
+					<a href="/about" style="color:#cfe6ff">About</a>
+					&nbsp;&middot;&nbsp;
+					<a href="https://www.linkedin.com/in/adam-ben-arbia/" style="color:#cfe6ff">Made by A.B.A</a>
+					&nbsp;&middot;&nbsp;
+					<a href="/privacy" style="color:#cfe6ff">Privacy</a>
+				</small>
+			</div>
+		</div>
+	</div>
+</footer>
 </body>
 </html>
