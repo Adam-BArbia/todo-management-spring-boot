@@ -19,6 +19,9 @@ public class UserController {
     @Autowired
     private ITodoService todoService;
 
+    @Autowired
+    private net.guides.springboot.todomanagement.service.TagService tagService;
+
     private String getLoggedInUserName() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
@@ -38,6 +41,7 @@ public class UserController {
         model.put("enabled", user == null || user.isEnabled());
         User u = userService.findByUsername(username);
         model.put("todoCount", (u != null) ? todoService.getTodosByUserId(u.getId()).size() : 0);
+        model.put("tags", tagService.findAll());
         return "profile";
     }
 
