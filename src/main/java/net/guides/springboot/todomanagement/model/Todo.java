@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import net.guides.springboot.todomanagement.model.User;
+import net.guides.springboot.todomanagement.model.Tag;
 
 @Entity
 @Table(name = "todos")
