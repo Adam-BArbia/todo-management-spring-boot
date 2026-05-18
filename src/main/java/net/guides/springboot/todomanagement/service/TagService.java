@@ -47,12 +47,14 @@ public class TagService {
         Optional<Tag> tagOpt = tagRepository.findById(id);
         if (tagOpt.isPresent()) {
             Tag tag = tagOpt.get();
-            // Remove this tag from all todos
+            // Remove this tag from all todos (match by id to avoid equals/hashCode issues)
             List<Todo> allTodos = todoRepository.findAll();
             for (Todo todo : allTodos) {
-                if (todo.getTags() != null && todo.getTags().contains(tag)) {
-                    todo.getTags().remove(tag);
-                    todoRepository.save(todo);
+                if (todo.getTags() != null) {
+                    boolean changed = todo.getTags().removeIf(t -> t.getId() != null && t.getId().equals(tag.getId()));
+                    if (changed) {
+                        todoRepository.save(todo);
+                    }
                 }
             }
             // Now delete the tag
