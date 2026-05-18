@@ -42,6 +42,9 @@ public class TodoController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private net.guides.springboot.todomanagement.service.TagService tagService;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		// Date - dd/MM/yyyy
@@ -53,6 +56,7 @@ public class TodoController {
 	public String showTodos(@RequestParam(required = false) String search,
 							@RequestParam(required = false) String statusFilter,
 							@RequestParam(required = false) String priorityFilter,
+							@RequestParam(required = false) String tagFilter,
 							ModelMap model) {
 		User user = getLoggedInUser(model);
 		Long userId = (user != null) ? user.getId() : null;
@@ -82,6 +86,14 @@ public class TodoController {
 			}
 		}
 
+		// filter by tag name (single tag) if provided
+		if (tagFilter != null && !tagFilter.isEmpty()) {
+			String tf = tagFilter.trim();
+			todos = todos.stream()
+					.filter(t -> t.getTags() != null && t.getTags().stream().anyMatch(tag -> tf.equals(tag.getName())))
+					.collect(Collectors.toList());
+		}
+
 		// filter by search (description) if provided
 		if (search != null && !search.trim().isEmpty()) {
 			String q = search.trim().toLowerCase();
@@ -108,6 +120,7 @@ public class TodoController {
 		model.put("priorityFilter", priorityFilter);
 		model.put("statuses", Status.values());
 		model.put("priorities", Priority.values());
+		model.put("allTags", tagService.findAll());
 		model.put("daysLeftMap", daysLeftMap);
 		return "list-todos";
 	}
@@ -131,6 +144,8 @@ public class TodoController {
 	@RequestMapping(value = "/add-todo", method = RequestMethod.GET)
 	public String showAddTodoPage(ModelMap model) {
 		model.addAttribute("todo", new Todo());
+		model.put("tagNames", "");
+		model.put("allTags", tagService.findAll());
 		return "todo";
 	}
 
@@ -146,24 +161,47 @@ public class TodoController {
 		Todo todo = todoService.getTodoById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid todo id: " + id));
 		model.put("todo", todo);
+		// prepare comma-separated tag names
+		if (todo.getTags() != null && !todo.getTags().isEmpty()) {
+			String tagNames = todo.getTags().stream().map(t -> t.getName()).collect(Collectors.joining(", "));
+			model.put("tagNames", tagNames);
+		} else {
+			model.put("tagNames", "");
+		}
+		model.put("allTags", tagService.findAll());
 		return "todo";
 	}
 
 	@RequestMapping(value = "/update-todo", method = RequestMethod.POST)
-	public String updateTodo(ModelMap model, @Valid Todo todo, BindingResult result) {
+	public String updateTodo(ModelMap model, @Valid Todo todo, BindingResult result,
+							 @RequestParam(value = "tagNames", required = false) String tagNames) {
 
 		if (result.hasErrors()) {
 			return "todo";
 		}
-
 		User user = getLoggedInUser(model);
 		if (user != null) todo.setUser(user);
+
+		// tags handled via request param 'tagNames' (comma separated)
+		if (tagNames != null) {
+			String[] parts = tagNames.split(",");
+			java.util.Set<net.guides.springboot.todomanagement.model.Tag> tags = new java.util.HashSet<>();
+			for (String p : parts) {
+				String n = p.trim();
+				if (n.isEmpty()) continue;
+				net.guides.springboot.todomanagement.model.Tag t = tagService.createIfNotExists(n);
+				if (t != null) tags.add(t);
+			}
+			todo.setTags(tags);
+		}
+
 		todoService.updateTodo(todo);
 		return "redirect:/list-todos";
 	}
 
 	@RequestMapping(value = "/add-todo", method = RequestMethod.POST)
-	public String addTodo(ModelMap model, @Valid Todo todo, BindingResult result) {
+	public String addTodo(ModelMap model, @Valid Todo todo, BindingResult result,
+						  @RequestParam(value = "tagNames", required = false) String tagNames) {
 
 		if (result.hasErrors()) {
 			return "todo";
@@ -171,6 +209,19 @@ public class TodoController {
 
 		User user = getLoggedInUser(model);
 		if (user != null) todo.setUser(user);
+
+		if (tagNames != null) {
+			String[] parts = tagNames.split(",");
+			java.util.Set<net.guides.springboot.todomanagement.model.Tag> tags = new java.util.HashSet<>();
+			for (String p : parts) {
+				String n = p.trim();
+				if (n.isEmpty()) continue;
+				net.guides.springboot.todomanagement.model.Tag t = tagService.createIfNotExists(n);
+				if (t != null) tags.add(t);
+			}
+			todo.setTags(tags);
+		}
+
 		todoService.saveTodo(todo);
 		return "redirect:/list-todos";
 	}

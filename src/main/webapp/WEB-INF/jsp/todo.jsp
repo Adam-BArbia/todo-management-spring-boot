@@ -43,6 +43,16 @@
 							</form:select>
 						</fieldset>
 
+						<fieldset class="form-group">
+							<label for="tagNames">Tags (comma-separated)</label>
+							<input list="tagSuggestions" name="tagNames" id="tagNames" class="form-control" value="${tagNames}" placeholder="e.g. urgent, work" />
+							<datalist id="tagSuggestions">
+								<c:forEach items="${allTags}" var="t">
+									<option value="${t.name}"></option>
+								</c:forEach>
+							</datalist>
+						</fieldset>
+
 						<button type="submit" class="btn btn-success">Save</button>
 					</form:form>
 

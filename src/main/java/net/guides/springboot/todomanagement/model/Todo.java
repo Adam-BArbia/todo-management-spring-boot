@@ -1,6 +1,8 @@
 package net.guides.springboot.todomanagement.model;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -34,6 +39,12 @@ public class Todo {
 	private Priority priority = Priority.MEDIUM;
 
 	private Status status = Status.TODO;
+
+	@ManyToMany
+	@JoinTable(name = "todo_tags",
+			joinColumns = @JoinColumn(name = "todo_id"),
+			inverseJoinColumns = @JoinColumn(name = "tag_id"))
+	private Set<Tag> tags = new HashSet<>();
 
 	public Todo() {
 		super();
@@ -92,5 +103,13 @@ public class Todo {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Set<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
 	}
 }

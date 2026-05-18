@@ -11,12 +11,16 @@ net\guides\springboot\todomanagement\model\User.class
 net\guides\springboot\todomanagement\repository\UserRepository.class
 net\guides\springboot\todomanagement\model\Priority.class
 net\guides\springboot\todomanagement\model\Status.class
+net\guides\springboot\todomanagement\model\Tag.class
 net\guides\springboot\todomanagement\service\UserService.class
 net\guides\springboot\todomanagement\security\CustomUserDetailsService.class
+net\guides\springboot\todomanagement\repository\TagRepository.class
 net\guides\springboot\todomanagement\security\SecurityConfiguration.class
 net\guides\springboot\todomanagement\model\Priority$1.class
 net\guides\springboot\todomanagement\security\LoginSuccessHandler.class
 net\guides\springboot\todomanagement\controller\ErrorController.class
+net\guides\springboot\todomanagement\controller\TagController.class
 net\guides\springboot\todomanagement\service\TodoService.class
 net\guides\springboot\todomanagement\controller\LogoutController.class
 net\guides\springboot\todomanagement\repository\TodoRepository.class
+net\guides\springboot\todomanagement\service\TagService.class

@@ -35,6 +35,16 @@
 									</c:forEach>
 								</select>
 							</div>
+
+							<div class="form-group" style="margin-left:10px;">
+								<label>Filter by Tag:</label>
+								<select name="tagFilter" class="form-control" style="margin-left:5px;">
+									<option value="">All</option>
+									<c:forEach items="${allTags}" var="tag">
+										<option value="${tag.name}" <c:if test="${tagFilter == tag.name}">selected</c:if>>${tag.name}</option>
+									</c:forEach>
+								</select>
+							</div>
 							<button type="submit" class="btn btn-default" style="margin-left:10px;">Apply</button>
 						</form>
 

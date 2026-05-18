@@ -34,4 +34,36 @@
     </div>
 </div>
 
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">Manage Tags</div>
+        <div class="panel-body">
+            <form method="post" action="/tags/create" class="form-inline" style="margin-bottom:10px;">
+                <div class="form-group">
+                    <input type="text" name="name" class="form-control" placeholder="New tag name" required />
+                </div>
+                <button class="btn btn-primary" type="submit">Create Tag</button>
+            </form>
+
+            <c:if test="${not empty tags}">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr><th>Name</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${tags}" var="t">
+                            <tr>
+                                <td>${t.name}</td>
+                                <td>
+                                    <a href="/tags/delete?id=${t.id}" class="btn btn-xs btn-danger" onclick="return confirm('Delete tag?\nThis will remove the tag association from todos, but not delete the todos.');">Delete</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
+        </div>
+    </div>
+</div>
+
 <%@ include file="common/footer.jspf"%>
