@@ -50,29 +50,33 @@ public class TodoController {
 	}
 
 	@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
-	public String showTodos(@RequestParam(required = false) String search, ModelMap model) {
+	public String showTodos(@RequestParam(required = false) String search,
+							@RequestParam(required = false) String statusFilter,
+							@RequestParam(required = false) String priorityFilter,
+							ModelMap model) {
 		User user = getLoggedInUser(model);
 		Long userId = (user != null) ? user.getId() : null;
 		// fetch all todos for user
 		java.util.List<Todo> todos = (userId != null) ? todoService.getTodosByUserId(userId) : java.util.Collections.emptyList();
 
-		// filter by status if provided
-		String statusFilter = model.get("statusFilter") != null ? model.get("statusFilter").toString() : null;
-		if (statusFilter != null && !statusFilter.isEmpty() && userId != null) {
+		// apply status and priority filters on the already-fetched list so multiple filters combine
+		if (statusFilter != null && !statusFilter.isEmpty()) {
 			try {
 				Status status = Status.valueOf(statusFilter);
-				todos = todoService.getTodosByUserIdAndStatus(userId, status);
+				todos = todos.stream()
+						.filter(t -> t.getStatus() == status)
+						.collect(Collectors.toList());
 			} catch (IllegalArgumentException e) {
 				// invalid status, ignore
 			}
 		}
 
-		// filter by priority if provided
-		String priorityFilter = model.get("priorityFilter") != null ? model.get("priorityFilter").toString() : null;
-		if (priorityFilter != null && !priorityFilter.isEmpty() && userId != null) {
+		if (priorityFilter != null && !priorityFilter.isEmpty()) {
 			try {
 				Priority priority = Priority.valueOf(priorityFilter);
-				todos = todoService.getTodosByUserIdAndPriority(userId, priority);
+				todos = todos.stream()
+						.filter(t -> t.getPriority() == priority)
+						.collect(Collectors.toList());
 			} catch (IllegalArgumentException e) {
 				// invalid priority, ignore
 			}

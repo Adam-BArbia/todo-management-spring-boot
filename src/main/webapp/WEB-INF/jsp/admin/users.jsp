@@ -41,8 +41,8 @@
                                         </c:choose>
                                     </td>
                                     <td class="text-right">
-                                        <a class="btn btn-sm btn-info" href="/admin/edit-user?id=${u.id}">Edit</a>
-                                        <a class="btn btn-sm btn-danger" href="/admin/delete-user?id=${u.id}" onclick="return confirm('Delete user ${u.username}?');">Delete</a>
+                                        <a class="btn btn-sm btn-info" href="/admin/edit-user?id=${u.id}"><i class="fa fa-pencil"></i></a>
+                                        <a class="btn btn-sm btn-danger" href="/admin/delete-user?id=${u.id}" onclick="return confirm('Delete user ${u.username}?');"><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                             </c:forEach>

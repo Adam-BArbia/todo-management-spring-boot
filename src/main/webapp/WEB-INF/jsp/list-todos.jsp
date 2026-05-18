@@ -22,7 +22,7 @@
 								<select name="statusFilter" class="form-control" style="margin-left:5px;">
 									<option value="">All</option>
 									<c:forEach items="${statuses}" var="status">
-										<option value="${status}" <c:if test="${statusFilter == status}">selected</c:if>>${status.label}</option>
+										<option value="${status.name()}" <c:if test="${statusFilter == status.toString()}">selected</c:if>>${status.label}</option>
 									</c:forEach>
 								</select>
 							</div>
@@ -31,7 +31,7 @@
 								<select name="priorityFilter" class="form-control" style="margin-left:5px;">
 									<option value="">All</option>
 									<c:forEach items="${priorities}" var="priority">
-										<option value="${priority}" <c:if test="${priorityFilter == priority}">selected</c:if>>${priority.label}</option>
+										<option value="${priority.name()}" <c:if test="${priorityFilter == priority.toString()}">selected</c:if>>${priority.label}</option>
 									</c:forEach>
 								</select>
 							</div>
@@ -51,45 +51,73 @@
 						</div>
 					</c:if>
 
-					<!-- Todos table -->
-					<c:if test="${not empty todos}">
-						<table class="table table-striped">
-							<thead>
+				<!-- Todos table -->
+				<c:if test="${not empty todos}">
+					<table class="table table-striped">
+						<thead>
+						<tr>
+							<th width="30%">Description</th>
+							<th width="20%">Target Date</th>
+							<th width="15%">Priority</th>
+							<th width="15%">Status</th>
+							<th width="20%">Actions</th>
+						</tr>
+						</thead>
+						<tbody>
+						<c:forEach items="${todos}" var="todo">
 							<tr>
-								<th width="40%">Description</th>
-								<th width="30%">Target Date</th>
-								<th width="30%"></th>
+								<td>${todo.description}</td>
+								<td>
+									<fmt:formatDate value="${todo.targetDate}" pattern="dd/MM/yyyy" />
+									<br>
+									<c:set var="daysLeft" value="${daysLeftMap[todo.id]}" />
+									<c:choose>
+										<c:when test="${daysLeft == null}">
+											<!-- no date -->
+										</c:when>
+										<c:when test="${daysLeft lt 0}">
+											<small class="text-danger">&nbsp;<strong>OVERDUE</strong></small>
+										</c:when>
+										<c:otherwise>
+											<small class="text-muted">&nbsp;(in ${daysLeft} days)</small>
+										</c:otherwise>
+									</c:choose>
+								</td>
+							<td>
+								<span class="label ${todo.priority.cssClass}">
+									${todo.priority.label}
+								</span>
+							</td>
+							<td>
+								<span class="label ${todo.status.cssClass}">
+									${todo.status.label}
+								</span>
+							</td>
+							<td>
+								<div style="margin-bottom: 8px;">
+									<a href="/update-todo?id=${todo.id}" class="btn btn-info btn-sm" title="Edit"><i class="fa fa-pencil"></i></a>
+									<a href="/delete-todo?id=${todo.id}" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this todo?');"><i class="fa fa-trash"></i></a>
+								</div>
+								<hr style="margin: 6px 0; border-color: #ddd;">
+								<div style="font-size: 11px; margin-bottom: 4px;">
+									<c:if test="${todo.status.toString() == 'TODO'}">
+										<a href="/update-todo-status?id=${todo.id}&status=IN_PROGRESS" class="btn btn-info btn-xs"><i class="fa fa-play"></i></a>
+										<a href="/update-todo-status?id=${todo.id}&status=COMPLETED" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>
+									</c:if>
+									<c:if test="${todo.status.toString() == 'IN_PROGRESS'}">
+										<a href="/update-todo-status?id=${todo.id}&status=COMPLETED" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>
+										<a href="/update-todo-status?id=${todo.id}&status=TODO" class="btn btn-default btn-xs"><i class="fa fa-undo"></i></a>
+									</c:if>
+									<c:if test="${todo.status.toString() == 'COMPLETED'}">
+										<a href="/update-todo-status?id=${todo.id}&status=TODO" class="btn btn-warning btn-xs"><i class="fa fa-refresh"></i></a>
+									</c:if>
+								</div>
+							</td>
 							</tr>
-							</thead>
-							<tbody>
-							<c:forEach items="${todos}" var="todo">
-								<tr>
-									<td>${todo.description}</td>
-									<td>
-										<fmt:formatDate value="${todo.targetDate}" pattern="dd/MM/yyyy" />
-										<c:set var="daysLeft" value="${daysLeftMap[todo.id]}" />
-										<c:choose>
-											<c:when test="${daysLeft == null}">
-												<!-- no date -->
-											</c:when>
-											<c:when test="${daysLeft lt 0}">
-												<small class="text-danger">&nbsp;<strong>OVERDUE</strong></small>
-											</c:when>
-											<c:otherwise>
-												<small class="text-muted">&nbsp;(in ${daysLeft} days)</small>
-											</c:otherwise>
-										</c:choose>
-									</td>
-									<td>
-										<a type="button" class="btn btn-success btn-sm" href="/update-todo?id=${todo.id}">Update</a>
-										<a type="button" class="btn btn-warning btn-sm" href="/delete-todo?id=${todo.id}"
-										   onclick="return confirm('Are you sure you want to delete this todo?');">Delete</a>
-									</td>
-								</tr>
-							</c:forEach>
-							</tbody>
-						</table>
-					</c:if>
+						</c:forEach>
+						</tbody>
+					</table>
+				</c:if>
 
 				</div>
 			</div>

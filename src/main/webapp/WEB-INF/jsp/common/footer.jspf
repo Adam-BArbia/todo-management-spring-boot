@@ -159,9 +159,9 @@
 	});
 </script>
 
-<div class="footer" style="align-content: center">
+<div class="footer" style="background-color: #010b29;align-content: center">
 	<h3>
-		<code style="background-color: black"><a href="https://www.linkedin.com/in/adam-ben-arbia/" style="color: cadetblue">made by A.B.A under MIT licence</a></code>
+		<code style="background-color: #010b29 "><a href="https://www.linkedin.com/in/adam-ben-arbia/" style="color: cadetblue; opacity: 30%">made by A.B.A under MIT licence</a></code>
 	</h3>
 </div>
 </body>
