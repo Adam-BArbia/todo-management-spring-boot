@@ -23,6 +23,8 @@ import net.guides.springboot.todomanagement.model.Todo;
 import net.guides.springboot.todomanagement.service.ITodoService;
 import net.guides.springboot.todomanagement.model.User;
 import net.guides.springboot.todomanagement.service.UserService;
+import net.guides.springboot.todomanagement.model.Priority;
+import net.guides.springboot.todomanagement.model.Status;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -54,6 +56,28 @@ public class TodoController {
 		// fetch all todos for user
 		java.util.List<Todo> todos = (userId != null) ? todoService.getTodosByUserId(userId) : java.util.Collections.emptyList();
 
+		// filter by status if provided
+		String statusFilter = model.get("statusFilter") != null ? model.get("statusFilter").toString() : null;
+		if (statusFilter != null && !statusFilter.isEmpty() && userId != null) {
+			try {
+				Status status = Status.valueOf(statusFilter);
+				todos = todoService.getTodosByUserIdAndStatus(userId, status);
+			} catch (IllegalArgumentException e) {
+				// invalid status, ignore
+			}
+		}
+
+		// filter by priority if provided
+		String priorityFilter = model.get("priorityFilter") != null ? model.get("priorityFilter").toString() : null;
+		if (priorityFilter != null && !priorityFilter.isEmpty() && userId != null) {
+			try {
+				Priority priority = Priority.valueOf(priorityFilter);
+				todos = todoService.getTodosByUserIdAndPriority(userId, priority);
+			} catch (IllegalArgumentException e) {
+				// invalid priority, ignore
+			}
+		}
+
 		// filter by search (description) if provided
 		if (search != null && !search.trim().isEmpty()) {
 			String q = search.trim().toLowerCase();
@@ -76,6 +100,10 @@ public class TodoController {
 
 		model.put("todos", todos);
 		model.put("search", search);
+		model.put("statusFilter", statusFilter);
+		model.put("priorityFilter", priorityFilter);
+		model.put("statuses", Status.values());
+		model.put("priorities", Priority.values());
 		model.put("daysLeftMap", daysLeftMap);
 		return "list-todos";
 	}
@@ -140,6 +168,17 @@ public class TodoController {
 		User user = getLoggedInUser(model);
 		if (user != null) todo.setUser(user);
 		todoService.saveTodo(todo);
+		return "redirect:/list-todos";
+	}
+
+	@RequestMapping(value = "/update-todo-status", method = RequestMethod.GET)
+	public String updateTodoStatus(@RequestParam long id, @RequestParam String status) {
+		try {
+			Status s = Status.valueOf(status);
+			todoService.updateTodoStatus(id, s);
+		} catch (IllegalArgumentException e) {
+			// ignore invalid status
+		}
 		return "redirect:/list-todos";
 	}
 }

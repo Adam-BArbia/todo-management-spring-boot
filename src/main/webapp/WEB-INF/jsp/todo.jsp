@@ -27,6 +27,22 @@
 							<form:errors path="targetDate" cssClass="text-warning" />
 						</fieldset>
 
+						<fieldset class="form-group">
+							<form:label path="priority">Priority</form:label>
+							<form:select path="priority" class="form-control">
+								<form:option value="">Select Priority</form:option>
+								<form:options items="${priorities}" itemLabel="label" />
+							</form:select>
+						</fieldset>
+
+						<fieldset class="form-group">
+							<form:label path="status">Status</form:label>
+							<form:select path="status" class="form-control">
+								<form:option value="">Select Status</form:option>
+								<form:options items="${statuses}" itemLabel="label" />
+							</form:select>
+						</fieldset>
+
 						<button type="submit" class="btn btn-success">Save</button>
 					</form:form>
 

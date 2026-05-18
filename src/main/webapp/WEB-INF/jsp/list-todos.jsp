@@ -15,6 +15,29 @@
 				<a class="btn btn-primary pull-right" href="/add-todo">Add Todo</a>
 			</form>
 
+						<!-- Filters -->
+						<form class="form-inline" method="GET" action="/list-todos" style="margin-bottom:10px;">
+							<div class="form-group" style="margin-right:10px;">
+								<label>Filter by Status:</label>
+								<select name="statusFilter" class="form-control" style="margin-left:5px;">
+									<option value="">All</option>
+									<c:forEach items="${statuses}" var="status">
+										<option value="${status}" <c:if test="${statusFilter == status}">selected</c:if>>${status.label}</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="form-group">
+								<label>Filter by Priority:</label>
+								<select name="priorityFilter" class="form-control" style="margin-left:5px;">
+									<option value="">All</option>
+									<c:forEach items="${priorities}" var="priority">
+										<option value="${priority}" <c:if test="${priorityFilter == priority}">selected</c:if>>${priority.label}</option>
+									</c:forEach>
+								</select>
+							</div>
+							<button type="submit" class="btn btn-default" style="margin-left:10px;">Apply</button>
+						</form>
+
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3>List of TODO's</h3>

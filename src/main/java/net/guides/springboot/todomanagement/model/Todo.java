@@ -30,7 +30,11 @@ public class Todo {
 	private String description;
 
 	private Date targetDate;
-	
+
+	private Priority priority = Priority.MEDIUM;
+
+	private Status status = Status.TODO;
+
 	public Todo() {
 		super();
 	}
@@ -72,5 +76,21 @@ public class Todo {
 
 	public void setTargetDate(Date targetDate) {
 		this.targetDate = targetDate;
+	}
+
+	public Priority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Priority priority) {
+		this.priority = priority;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 }

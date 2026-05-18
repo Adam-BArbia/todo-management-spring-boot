@@ -11,6 +11,8 @@ import net.guides.springboot.todomanagement.model.Todo;
 import net.guides.springboot.todomanagement.repository.TodoRepository;
 import net.guides.springboot.todomanagement.model.User;
 import net.guides.springboot.todomanagement.service.UserService;
+import net.guides.springboot.todomanagement.model.Priority;
+import net.guides.springboot.todomanagement.model.Status;
 
 @Service
 public class TodoService implements ITodoService {
@@ -61,5 +63,21 @@ public class TodoService implements ITodoService {
 		if (targetDate == null) return -1;
 		long diff = targetDate.getTime() - System.currentTimeMillis();
 		return diff / (1000 * 60 * 60 * 24);
+	}
+
+	public List<Todo> getTodosByUserIdAndStatus(Long userId, Status status) {
+		return todoRepository.findByUser_IdAndStatus(userId, status);
+	}
+
+	public List<Todo> getTodosByUserIdAndPriority(Long userId, Priority priority) {
+		return todoRepository.findByUser_IdAndPriority(userId, priority);
+	}
+
+	public void updateTodoStatus(Long todoId, Status status) {
+		Optional<Todo> todo = todoRepository.findById(todoId);
+		if (todo.isPresent()) {
+			todo.get().setStatus(status);
+			todoRepository.save(todo.get());
+		}
 	}
 }

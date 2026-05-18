@@ -17,3 +17,6 @@ CREATE TABLE IF NOT EXISTS todos (
     PRIMARY KEY (id),
     CONSTRAINT fk_todos_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
+/* Add priority and status columns if they don't exist - compatible with existing schema */
+ALTER TABLE todos ADD COLUMN IF NOT EXISTS priority VARCHAR(50) DEFAULT 'MEDIUM';
+ALTER TABLE todos ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'TODO';

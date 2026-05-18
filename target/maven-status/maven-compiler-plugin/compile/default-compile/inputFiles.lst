@@ -12,7 +12,9 @@ C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\s
 C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\springboot\todomanagement\model\Todo.java
 C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\springboot\todomanagement\security\CustomUserDetailsService.java
 C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\springboot\todomanagement\TodoManagementSpringBoot2Application.java
+C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\springboot\todomanagement\model\Priority.java
 C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\springboot\todomanagement\controller\WelcomeController.java
+C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\springboot\todomanagement\model\Status.java
 C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\springboot\todomanagement\controller\TodoController.java
 C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\springboot\todomanagement\controller\ErrorController.java
 C:\Users\MOI\IdeaProjects\todo-management-spring-boot\src\main\java\net\guides\springboot\todomanagement\controller\UserController.java
