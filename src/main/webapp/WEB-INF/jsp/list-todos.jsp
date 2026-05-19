@@ -135,6 +135,24 @@
 										<c:if test="${empty todo.subtasks}">
 											<div class="text-muted">No subtasks</div>
 										</c:if>
+											<hr style="margin: 10px 0;">
+											<div class="panel panel-default" style="margin:10px 0;">
+												<div class="panel-heading" style="padding: 8px 15px;">
+													<h5 style="margin: 0;">Add New Subtask</h5>
+												</div>
+												<div class="panel-body" style="padding: 10px;">
+													<form method="post" action="/subtask/create" class="form-inline" style="margin-bottom:0;">
+														<input type="hidden" name="todoId" value="${todo.id}" />
+														<div class="form-group" style="margin-right: 10px;">
+															<input type="text" name="name" class="form-control" placeholder="Subtask name" required style="width:200px;" />
+														</div>
+														<div class="form-group" style="margin-right: 10px;">
+															<input type="text" name="dueFrom" class="form-control" placeholder="Due date (dd/MM/yyyy)" style="width:150px;" />
+														</div>
+														<button type="submit" class="btn btn-success btn-sm">Add Subtask</button>
+													</form>
+												</div>
+											</div>
 									</div>
 								</td>
 							</tr>
