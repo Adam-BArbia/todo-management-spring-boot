@@ -72,9 +72,9 @@
 			<!-- Main todo row -->
 			<tr>
 			<td>
-				<c:if test="${subtaskTotalMap[todo.id] != null && subtaskTotalMap[todo.id] > 0}">
+				<!--  -->
 					<a href="#" onclick="toggleSubtasks(${todo.id}); return false;" class="btn btn-link" style="padding: 0; margin-right: 5px;" title="Show/Hide Subtasks"><i class="fa fa-chevron-down" id="arrow-${todo.id}"></i></a>
-				</c:if>
+				<!---->
 				${todo.description}
 				<c:if test="${subtaskTotalMap[todo.id] != null && subtaskTotalMap[todo.id] > 0}">
 					<br/>
