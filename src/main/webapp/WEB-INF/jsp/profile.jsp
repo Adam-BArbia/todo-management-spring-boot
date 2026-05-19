@@ -28,14 +28,14 @@
             <p><strong>Pending Todos:</strong> ${todoCount}</p>
 
             <a class="btn btn-primary" href="/change-password">Change Password</a>
-            <a class="btn btn-default" href="/list-todos">My Todos</a>
-            <a class="btn btn-default" href="/">Home</a>
+                  <a class="btn btn-info" href="/list-todos">My Todos</a>
+                  <a class="btn btn-info" href="/">Home</a>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <div class="panel panel-default">
+      <div class="panel panel-primary">
         <div class="panel-heading">Manage Tags</div>
         <div class="panel-body">
             <form method="post" action="/tags/create" class="form-inline" style="margin-bottom:10px;">

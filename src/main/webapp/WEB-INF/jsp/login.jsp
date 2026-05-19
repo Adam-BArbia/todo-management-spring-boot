@@ -42,8 +42,8 @@
                             <input type="password" id="password" name="password" class="form-control" required="required" autocomplete="current-password" />
                         </fieldset>
 
-                        <button type="submit" class="btn btn-success">Login</button>
-                        <a href="/register" class="btn btn-default">Register</a>
+                                      <button type="submit" class="btn btn-primary">Login</button>
+                                      <a href="/register" class="btn btn-info">Register</a>
                     </form>
 
                 </div>

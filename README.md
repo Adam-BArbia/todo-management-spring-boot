@@ -1,48 +1,105 @@
-# README.md
+# Todo Management Spring Boot
 
-## Todo Management — Spring Boot
+A Spring Boot web application for managing todos, tags, subtasks, users, and authentication with JSP views and MySQL.
 
-Developer quick-start guide for Windows (PowerShell).
+## What the system does
 
-## Prerequisites
-- Java 8 (OpenJDK/Temurin)
-- Maven 3.6+
-- MySQL server (or Docker)
+- Users register, log in, and manage their own todo list.
+- Todos support:
+  - description
+  - target date
+  - priority
+  - status
+  - tags
+  - subtasks
+- Subtasks belong to a parent todo and can be marked independently.
+- The app uses Spring Security for login/logout and role-based access.
+- The UI is rendered with JSP pages under `src/main/webapp/WEB-INF/jsp/`.
 
-## Quick start
-1. Run MySQL (Docker):
+## Tech stack
+
+- Java 8
+- Spring Boot 2.0.4
+- Spring MVC + JSP
+- Spring Data JPA / Hibernate
+- Spring Security
+- MySQL 8 via XAMPP
+- Bootstrap 3 + Font Awesome
+
+## Database setup with XAMPP
+
+The app expects MySQL to be available on `localhost:3306` and uses the database below:
+
+- Database name: `todo_db`
+- Username: `springuser`
+- Password: `springpass`
+
+These values are configured in `src/main/resources/application.properties`.
+
+If your local MySQL user/password is different, update the datasource properties before launching the app.
+
+## How the app is structured
+
+- `src/main/java/.../controller/` — request handlers for home, todos, users, tags, subtasks, auth.
+- `src/main/java/.../service/` — business logic and status updates.
+- `src/main/java/.../repository/` — JPA repositories.
+- `src/main/java/.../model/` — entities like `Todo`, `Tag`, `Subtask`, and `User`.
+- `src/main/webapp/WEB-INF/jsp/` — JSP pages for the UI.
+- `src/main/resources/application.properties` — datasource and view resolver settings.
+
+## Run the project with Maven
+
+From the project root:
+
 ```powershell
-docker run --name todo-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=todo_db -e MYSQL_USER=springuser -e MYSQL_PASSWORD=springpass -p 3306:3306 -d mysql:5.7
+mvn clean package -DskipTests
 ```
-2. Start app:
+
+Then run the application with:
+
 ```powershell
-d C:\Users\MOI\IdeaProjects\todo-management-spring-boot
-```
 mvn -DskipTests spring-boot:run
-3. Access app:
-- Login: http://localhost:8080/login
-- Home: http://localhost:8080/
-- Todos: http://localhost:8080/list-todos
-- Register: http://localhost:8080/register
-## Default credentials (dev)
-- Admin: username `admin`, password `admin`
-- MySQL: user `springuser`, password `springpass` at localhost:3306
+```
 
-#Build & run jar
+Or, if you already built the project and just want to start it:
+
 ```powershell
-mvn -DskipTests clean package
 java -jar .\target\todo-management-spring-boot-0.0.1-SNAPSHOT.jar
 ```
-#Run tests
+
+## Run the packaged JAR
+
+If the JAR already exists in `target/`, start it directly:
+
 ```powershell
-mvn test
+java -jar .\target\todo-management-spring-boot-0.0.1-SNAPSHOT.jar
 ```
-#Key files
-- Main: src/main/java/..
-    /TodoManagementSpringBoot2Application.java
-- Controllers: src/main/java/.../controller/*
-- Views: src/main/webapp/WEB-INF/jsp/*
-- Config: src/main/resources/application.properties
-- DB: src/main/resources/schema.sql, data.sql
-- Tests: src/test/java/..
-    /TodoRepositoryTest.java, UserServiceTest.java
+
+## Useful URLs
+
+- Home: `http://localhost:8080/`
+- Login: `http://localhost:8080/login`
+- Register: `http://localhost:8080/register`
+- Todos: `http://localhost:8080/list-todos`
+- Profile: `http://localhost:8080/profile`
+
+## Default development credentials
+
+If the demo data is loaded, the sample admin account is typically:
+
+- Username: `admin`
+- Password: `admin`
+
+## Troubleshooting
+
+- **Cannot connect to database**: confirm MySQL is running and the `todo_db` database exists.
+- **Port 8080 already in use**: stop the app or free the port before starting again.
+- **JSP changes do not appear**: rebuild with Maven and restart the app.
+- **Old build artifacts cause issues**: delete the `target/` folder and rebuild.
+
+## Quick command reference
+
+```powershell
+mvn clean package -DskipTests
+java -jar .\target\todo-management-spring-boot-0.0.1-SNAPSHOT.jar
+```

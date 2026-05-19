@@ -12,11 +12,19 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 	<style>
+		:root {
+			--theme-blue: #0b2340;
+			--theme-blue-dark: #062033;
+			--theme-blue-mid: #123b67;
+			--theme-blue-soft: #edf4ff;
+			--theme-border: #dbe3ef;
+		}
+
 		body {
 			margin: 0;
 			padding: 0;
 			padding-top: 80px; /* space for fixed navbar */
-			background-color: #f8f9fb;
+			background-color: #f8fbff;
 			color: #222;
 			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 		}
@@ -47,10 +55,58 @@
 			vertical-align: middle;
 		}
 
+		.panel-primary {
+			border-color: var(--theme-blue);
+			box-shadow: 0 8px 20px rgba(11, 35, 64, 0.08);
+		}
+		.panel-primary > .panel-heading {
+			background-color: var(--theme-blue);
+			border-color: var(--theme-blue);
+			color: #fff;
+			font-weight: 600;
+		}
+
+		.btn-primary {
+			background-color: var(--theme-blue);
+			border-color: var(--theme-blue-dark);
+		}
+		.btn-primary:hover,
+		.btn-primary:focus,
+		.btn-primary:active,
+		.btn-primary.active,
+		.open > .dropdown-toggle.btn-primary {
+			background-color: var(--theme-blue-mid);
+			border-color: var(--theme-blue-dark);
+		}
+
+		.btn-info {
+			background-color: var(--theme-blue-mid);
+			border-color: var(--theme-blue);
+		}
+		.btn-info:hover,
+		.btn-info:focus,
+		.btn-info:active,
+		.btn-info.active,
+		.open > .dropdown-toggle.btn-info {
+			background-color: var(--theme-blue);
+			border-color: var(--theme-blue-dark);
+		}
+
+		.badge,
+		.label-primary {
+			background-color: var(--theme-blue);
+		}
+
+		.alert-info {
+			background-color: var(--theme-blue-soft);
+			border-color: var(--theme-border);
+			color: #1f3a5a;
+		}
+
 		/* Navbar tweaks */
 		.navbar-inverse {
-			background-color: #0b2340;
-			border-color: #062033;
+			background-color: var(--theme-blue);
+			border-color: var(--theme-blue-dark);
 			padding: 5px 0 !important;
 			min-height: auto !important;
 		}
