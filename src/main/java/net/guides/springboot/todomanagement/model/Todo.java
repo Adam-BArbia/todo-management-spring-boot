@@ -15,6 +15,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.Table;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
 import javax.validation.constraints.Size;
 
 import net.guides.springboot.todomanagement.model.User;
@@ -46,6 +48,9 @@ public class Todo {
 			joinColumns = @JoinColumn(name = "todo_id"),
 			inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private Set<Tag> tags = new HashSet<>();
+    
+	@OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<net.guides.springboot.todomanagement.model.Subtask> subtasks = new HashSet<>();
 
 	public Todo() {
 		super();
@@ -112,5 +117,13 @@ public class Todo {
 
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public Set<net.guides.springboot.todomanagement.model.Subtask> getSubtasks() {
+		return subtasks;
+	}
+
+	public void setSubtasks(Set<net.guides.springboot.todomanagement.model.Subtask> subtasks) {
+		this.subtasks = subtasks;
 	}
 }

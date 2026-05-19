@@ -114,7 +114,24 @@ public class TodoController {
 			}
 		}
 
+		// build subtask counts: total and completed per todo
+		Map<Long, Integer> subtaskTotalMap = new HashMap<>();
+		Map<Long, Integer> subtaskCompletedMap = new HashMap<>();
+		for (Todo t : todos) {
+			int total = (t.getSubtasks() != null) ? t.getSubtasks().size() : 0;
+			int completed = 0;
+			if (t.getSubtasks() != null) {
+				for (net.guides.springboot.todomanagement.model.Subtask st : t.getSubtasks()) {
+					if (st.getStatus() == Status.COMPLETED) completed++;
+				}
+			}
+			subtaskTotalMap.put(t.getId(), total);
+			subtaskCompletedMap.put(t.getId(), completed);
+		}
+
 		model.put("todos", todos);
+		model.put("subtaskTotalMap", subtaskTotalMap);
+		model.put("subtaskCompletedMap", subtaskCompletedMap);
 		model.put("search", search);
 		model.put("statusFilter", statusFilter);
 		model.put("priorityFilter", priorityFilter);

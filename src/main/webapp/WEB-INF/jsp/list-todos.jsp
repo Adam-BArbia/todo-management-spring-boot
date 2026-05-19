@@ -60,40 +60,94 @@
 							<strong>No todos yet!</strong> Click "Add Todo" to create one.
 						</div>
 					</c:if>
-
-				<!-- Todos table -->
-				<c:if test="${not empty todos}">
-					<table class="table table-striped">
+					<table class="table table-condensed" style="margin:0;">
 						<thead>
-						<tr>
-							<th width="25%">Description</th>
-							<th width="15%">Target Date</th>
-							<th width="12%">Priority</th>
-							<th width="12%">Status</th>
-							<th width="13%">Tags</th>
-							<th width="23%">Actions</th>
-						</tr>
+							<tr>
+								<th>Name</th>
+								<th>Due</th>
+								<th>Status</th>
+								<th>Action</th>
+							</tr>
 						</thead>
 						<tbody>
-						<c:forEach items="${todos}" var="todo">
+						<c:forEach items="${todo.subtasks}" var="st">
 							<tr>
-								<td>${todo.description}</td>
+								<td>${st.name}</td>
 								<td>
-									<fmt:formatDate value="${todo.targetDate}" pattern="dd/MM/yyyy" />
-									<br>
-									<c:set var="daysLeft" value="${daysLeftMap[todo.id]}" />
+									<c:if test="${not empty st.dueFrom}">
+										<fmt:formatDate value="${st.dueFrom}" pattern="dd/MM/yyyy" />
+									</c:if>
+								</td>
+								<td>
+									<span class="label ${st.status.cssClass}">${st.status.label}</span>
+								</td>
+								<td>
 									<c:choose>
-										<c:when test="${daysLeft == null}">
-											<!-- no date -->
-										</c:when>
-										<c:when test="${daysLeft lt 0}">
-											<small class="text-danger">&nbsp;<strong>OVERDUE</strong></small>
+										<c:when test="${st.status.toString() == 'COMPLETED'}">
+											<a href="/subtask/update-status?id=${st.id}&status=TODO" class="btn btn-xs btn-default">Mark Not Done</a>
 										</c:when>
 										<c:otherwise>
-											<small class="text-muted">&nbsp;(in ${daysLeft} days)</small>
+											<a href="/subtask/update-status?id=${st.id}&status=COMPLETED" class="btn btn-xs btn-success">Mark Done</a>
 										</c:otherwise>
 									</c:choose>
 								</td>
+							</tr>
+							<tr id="subtasks-row-${todo.id}" style="display:none;">
+								<td colspan="6">
+									<div class="subtasks-list">
+										<c:if test="${not empty todo.subtasks}">
+											<table class="table table-condensed" style="margin:0;">
+												<thead>
+												<tr>
+													<th>Name</th>
+													<th>Due</th>
+													<th>Status</th>
+													<th>Action</th>
+												</tr>
+												</thead>
+												<tbody>
+												<c:forEach items="${todo.subtasks}" var="st">
+													<tr>
+														<td>${st.name}</td>
+														<td>
+															<c:if test="${not empty st.dueFrom}">
+																<fmt:formatDate value="${st.dueFrom}" pattern="dd/MM/yyyy" />
+															</c:if>
+														</td>
+														<td>
+															<span class="label ${st.status.cssClass}">${st.status.label}</span>
+														</td>
+														<td>
+															<c:choose>
+																<c:when test="${st.status.toString() == 'COMPLETED'}">
+																	<a href="/subtask/update-status?id=${st.id}&status=TODO" class="btn btn-xs btn-default">Mark Not Done</a>
+																</c:when>
+																<c:otherwise>
+																	<a href="/subtask/update-status?id=${st.id}&status=COMPLETED" class="btn btn-xs btn-success">Mark Done</a>
+																</c:otherwise>
+															</c:choose>
+														</td>
+													</tr>
+												</c:forEach>
+												</tbody>
+											</table>
+										</c:if>
+										<c:if test="${empty todo.subtasks}">
+											<div class="text-muted">No subtasks</div>
+										</c:if>
+									</div>
+								</td>
+							</tr>
+						</c:forEach>
+						</tbody>
+					</table>
+					</c:if>
+					<c:if test="${empty todo.subtasks}">
+						<div class="text-muted">No subtasks</div>
+					</c:if>
+				</div>
+				</td>
+				</tr>
 							<td>
 								<span class="label ${todo.priority.cssClass}">
 									${todo.priority.label}
@@ -116,6 +170,7 @@
 							</td>
 							<td>
 								<div style="margin-bottom: 8px;">
+									<a href="#" onclick="toggleSubtasks(${todo.id}); return false;" class="btn btn-default btn-sm" title="Show/Hide Subtasks"><i class="fa fa-list"></i></a>
 									<a href="/update-todo?id=${todo.id}" class="btn btn-info btn-sm" title="Edit"><i class="fa fa-pencil"></i></a>
 									<a href="/delete-todo?id=${todo.id}" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this todo?');"><i class="fa fa-trash"></i></a>
 								</div>
@@ -148,3 +203,15 @@
 </div>
 
 <%@ include file="common/footer.jspf"%>
+
+<script type="text/javascript">
+function toggleSubtasks(id) {
+	var row = document.getElementById('subtasks-row-' + id);
+	if (!row) return;
+	if (row.style.display === 'none' || row.style.display === '') {
+		row.style.display = 'table-row';
+	} else {
+		row.style.display = 'none';
+	}
+}
+</script>
